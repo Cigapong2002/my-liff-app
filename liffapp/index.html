@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My LIFF App</title>
+    <script src="https://static.line-scdn.net/liff/2.1/sdk.js"></script>
+    <script>
+        function initializeApp() {
+            liff.init({ liffId: "2008080056" }).then(() => {
+                if (liff.isLoggedIn()) {
+                    getProfile();
+                } else {
+                    liff.login();
+                }
+            }).catch((err) => {
+                console.error('LIFF Initialization failed', err);
+            });
+        }
+
+        function getProfile() {
+            liff.getProfile().then(profile => {
+                document.getElementById('profile').innerHTML = `
+                    <p>Hello, ${profile.displayName}</p>
+                    <img src="${profile.pictureUrl}" alt="Profile Picture">
+                `;
+            }).catch((err) => {
+                console.error('Error getting profile', err);
+            });
+        }
+
+        window.onload = function() {
+            initializeApp();
+        };
+    </script>
+</head>
+<body>
+    <h1>Welcome to My LIFF App!</h1>
+    <div id="profile"></div>
+</body>
+</html>
