@@ -12,23 +12,24 @@
 </head>
 <body>
     <h1>LIFF Profile</h1>
-    <div id="profile-container">Loading profile...</div>
+    <div id="profile-container">Loading...</div>
 
     <script>
+        // LIFF ID ของคุณ
+        const myLiffId = "2008080056-lnpr1ggW"; 
+
         document.addEventListener('DOMContentLoaded', function() {
-            liff.init({
-                liffId: '2008080056-lnpr1ggW' 
-            })
+            liff.init({ liffId: myLiffId })
             .then(() => {
-                if (!liff.isLoggedIn()) {
-                    liff.login();
-                } else {
+                if (liff.isLoggedIn()) {
                     getProfile();
+                } else {
+                    liff.login();
                 }
             })
             .catch((err) => {
                 const container = document.getElementById('profile-container');
-                container.textContent = 'LIFF initialization failed: ' + err.message;
+                container.textContent = 'LIFF initialization failed: ' + err.code + " " + err.message;
             });
         });
 
