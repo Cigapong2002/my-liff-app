@@ -6,39 +6,54 @@
     <title>My LIFF App</title>
     <script src="https://static.line-scdn.net/liff/2.1/sdk.js"></script>
     <script>
+        // ฟังก์ชันที่ใช้สำหรับการเริ่มต้น LIFF
         function initializeApp() {
-            liff.init({ liffId: "2008080056-lnpr1ggW" }).then(() => {
-                console.log("LIFF Initialized"); 
+            console.log('Initializing LIFF...'); // ตรวจสอบว่า LIFF กำลังเริ่มต้น
+
+            // ตรวจสอบว่า SDK ถูกโหลดหรือไม่
+            if (typeof liff === 'undefined') {
+                console.error('LIFF SDK is not loaded.');
+                return;
+            }
+
+            // เริ่มต้น LIFF ด้วย LIFF ID
+            liff.init({ liffId: '2008080056-lnpr1ggW' }).then(() => {
+                console.log("LIFF Initialized");
+
+                // ตรวจสอบว่า User ล็อกอินหรือยัง
                 if (liff.isLoggedIn()) {
                     console.log("User is logged in");
-                    getProfile();
+                    getProfile(); // ดึงข้อมูลโปรไฟล์
                 } else {
                     console.log("User is not logged in, initiating login");
-                    liff.login(); 
+                    liff.login(); // ถ้ายังไม่ได้ล็อกอิน จะทำการล็อกอิน
                 }
             }).catch((err) => {
                 console.error("LIFF Initialization failed", err);
             });
         }
 
+        // ฟังก์ชันที่ดึงข้อมูลโปรไฟล์
         function getProfile() {
+            console.log('Getting profile...');
             liff.getProfile().then(profile => {
-                console.log("Profile data:", profile); 
+                console.log("Profile data:", profile); // ตรวจสอบข้อมูลโปรไฟล์ที่ได้รับ
                 document.getElementById('profile').innerHTML = `
                     <p>Hello, ${profile.displayName}</p>
                     <img src="${profile.pictureUrl}" alt="Profile Picture">
                 `;
             }).catch((err) => {
-                console.error("Error getting profile", err);
+                console.error("Error getting profile", err); // หากดึงโปรไฟล์ไม่ได้
                 document.getElementById('profile').innerHTML = `
                     <p>Failed to load profile. Please try again later.</p>
                 `;
             });
         }
 
-        window.onload = function() {
+        // เรียกฟังก์ชัน initializeApp เมื่อ DOM โหลดเสร็จ
+        document.addEventListener("DOMContentLoaded", function() {
             initializeApp();
-        };
+        });
     </script>
 </head>
 <body>
