@@ -8,24 +8,31 @@
     <script>
         function initializeApp() {
             liff.init({ liffId: "2008080056-lnpr1ggW" }).then(() => {
+                console.log("LIFF Initialized"); 
                 if (liff.isLoggedIn()) {
+                    console.log("User is logged in");
                     getProfile();
                 } else {
-                    liff.login();
+                    console.log("User is not logged in, initiating login");
+                    liff.login(); 
                 }
             }).catch((err) => {
-                console.error('LIFF Initialization failed', err);
+                console.error("LIFF Initialization failed", err);
             });
         }
 
         function getProfile() {
             liff.getProfile().then(profile => {
+                console.log("Profile data:", profile); 
                 document.getElementById('profile').innerHTML = `
                     <p>Hello, ${profile.displayName}</p>
                     <img src="${profile.pictureUrl}" alt="Profile Picture">
                 `;
             }).catch((err) => {
-                console.error('Error getting profile', err);
+                console.error("Error getting profile", err);
+                document.getElementById('profile').innerHTML = `
+                    <p>Failed to load profile. Please try again later.</p>
+                `;
             });
         }
 
@@ -36,6 +43,6 @@
 </head>
 <body>
     <h1>Welcome to My LIFF App!</h1>
-    <div id="profile"></div>
+    <div id="profile">Loading...</div> 
 </body>
 </html>
