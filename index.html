@@ -1,21 +1,56 @@
 <!doctype html>
 <html lang="en">
   <head>
+    
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Profile</title>
     <style>
-      .message {
-        padding: 10px;
-        background: #ddd;
+      body {
+        font-family: Arial, sans-serif;
+        display: flex; 
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        background-color: #f4f4f4;
+      }
+      .profile-container {
+        display: flex;
+        flex-direction: column; 
+        align-items: center; /* show profile */
+        text-align: center;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+      }
+      #profileImage {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%; 
+        object-fit: cover; 
+        margin-bottom: 15px;
+      }
+      .profile-info div {
+        margin-bottom: 5px; 
+        font-size: 16px;
+        color: #333;
+      }
+      .profile-info b {
+        font-weight: bold;
+        color: #000;
       }
     </style>
   </head>
   <body>
-    <div id="lineprofile" style="display: none; justify-content: center;">
-      <img width="100px" id="profileImage" src="" /><br>
-        Hello <b><span id="profileName">Name</span></b><br>
-        UID <span id="profileUID">UID</span><br>
+    <div id="lineprofile" class="profile-container" style="display: none;">
+      <img id="profileImage" src="" alt="Profile Image" />
+      <div class="profile-info">
+        <div>Hello <b><span id="profileName">Name</span></b></div>
+        <div>UID <span id="profileUID">UID</span></div>
+      </div>
+    </div>
+
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <script>
       let userId = "";
@@ -24,6 +59,7 @@
         liff.logout();
         window.location.reload();
       };
+
       const main = async () => {
         await liff.init({ liffId: "2008087899-DrZbj6oV" });
         if (liff.isLoggedIn()) {
