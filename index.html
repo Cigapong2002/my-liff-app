@@ -1,82 +1,58 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        display: flex; 
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        margin: 0;
-        background-color: #f4f4f4;
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Service Message Test</title>
+  <script src="https://static.line-scdn.net/liff/2.22.3/sdk.js"></script>
+  <style>
+    body { font-family: sans-serif; text-align: center; margin-top: 50px; }
+    button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
+    #status { margin-top: 20px; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+  <h1>ทดสอบ Service Message</h1>
+  <p>กดปุ่มเพื่อส่งข้อความแจ้งเตือนผ่าน LINE Mini App Notice</p>
+  <button id="sendButton" onclick="sendMessage()">ส่งข้อความ</button>
+  <div id="status"></div>
+
+  <script>
+    const LIFF_ID = '2008098156-eMaRdYAn'; 
+    const SERVER_URL = 'http://localhost:3000/send-message'; 
+
+    async function initializeLiff() {
+      await liff.init({ liffId: LIFF_ID });
+      document.getElementById('status').innerText = 'LIFF เริ่มทำงานแล้ว!';
+    }
+
+    async function sendMessage() {
+      if (!liff.isLoggedIn()) {
+        liff.login();
+        return;
       }
-      .profile-container {
-        display: flex;
-        flex-direction: column; 
-        align-items: center; 
-        text-align: center;
-        background-color: #fff;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+      
+      const liffAccessToken = liff.getAccessToken();
+      
+      // ส่ง LIFF Access Token ไปยัง Server ของเรา
+      const response = await fetch(SERVER_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-liff-access-token': liffAccessToken
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        document.getElementById('status').innerText = 'ส่ง Service Message สำเร็จ!';
       }
-      #profileImage {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%; 
-        object-fit: cover; 
-        margin-bottom: 15px;
-      }
-      .profile-info div {
-        margin-bottom: 5px; 
-        font-size: 16px;
-        color: #333;
-      }
-      .profile-info b {
-        font-weight: bold;
-        color: #000;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="lineprofile" class="profile-container" style="display: none;">
-      <img id="profileImage" src="" alt="Profile Image" />
-      <div class="profile-info">
-        <div>Hello <b><span id="profileName">Name</span></b></div>
-        <div>UID <span id="profileUID">UID</span></div>
-      </div>
-    </div>
+    }
 
-    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-    <script>
-      let userId = "";
+    initializeLiff();
+  </script>
 
-      const logOut = () => {
-        liff.logout();
-        window.location.reload();
-      };
-
-      const main = async () => {
-        await liff.init({ liffId: "2008087899-DrZbj6oV" });
-        if (liff.isLoggedIn()) {
-          const profile = await liff.getProfile();
-
-          profileImage.src = profile.pictureUrl;
-          profileName.innerText = profile.displayName;
-          profileUID.innerText = profile.userId;
-
-          userId = profile.userId;
-
-          lineprofile.style.display = "flex";
-        } else {
-          liff.login();
-        }
-      };
-      main();
-    </script>
-  </body>
+</body>
 </html>
